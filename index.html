@@ -339,6 +339,8 @@
             { name: 'Zibrary', url: 'https://z-library.sk/' }
         ];
 
+        links.sort((a, b) => a.name.localeCompare(b.name));
+
         let editingIndex = -1; // -1 = adding new, >=0 = editing that index
 
         function renderLinks() {
@@ -422,6 +424,8 @@
                 // Update existing
                 links[editingIndex] = { name, url };
             }
+
+            links.sort((a, b) => a.name.localeCompare(b.name));
 
             localStorage.setItem('customLinks', JSON.stringify(links));
             renderLinks();
