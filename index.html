@@ -76,19 +76,32 @@
         }
 
         .links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 40px;
-            max-width: 1000px;
-            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 50px 30px;
+            width: 100%;
+            max-width: 1300px;
+            padding: 50px 20px;
+            justify-items: center;
         }
 
         .link-wrapper {
             position: relative;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            width: 100%;
+            padding: 12px;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+
+        .link-wrapper:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="light"] .link-wrapper:hover {
+            background: rgba(0, 0, 0, 0.03);
         }
 
         .link-item {
@@ -98,6 +111,16 @@
             color: var(--link);
             text-decoration: none;
             transition: color 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .link-icon {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
         }
 
         .link-item:hover {
@@ -108,9 +131,9 @@
             content: '';
             position: absolute;
             left: 0;
-            bottom: -8px;
+            bottom: -6px;
             width: 100%;
-            height: 3px;
+            height: 2px;
             background: var(--underline);
             transform: scaleX(0);
             transform-origin: right;
@@ -123,32 +146,51 @@
         }
 
         .action-btn {
+            position: absolute;
+            background: var(--bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
             color: var(--muted);
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.2s, color 0.2s;
+            transition: all 0.25s ease;
             user-select: none;
+            z-index: 5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .link-wrapper:hover .action-btn {
-            opacity: 0.6;
-        }
-
-        .action-btn:hover {
-            opacity: 1;
-            color: var(--text);
+        [data-theme="light"] .action-btn {
+            border-color: rgba(0, 0, 0, 0.1);
         }
 
         .edit-btn {
-            font-size: 1.15rem;
+            right: 45px;
+            top: 5px;
         }
 
         .delete-btn {
-            font-size: 1.2rem;
+            right: 15px;
+            top: 5px;
+        }
+
+        .link-wrapper:hover .action-btn {
+            opacity: 0.8;
+        }
+
+        .action-btn:hover {
+            opacity: 1 !important;
+            scale: 1.1;
+            color: var(--text);
         }
 
         .add-btn {
+
             color: var(--muted);
             font-size: 1.8rem;
             line-height: 1;
@@ -228,8 +270,10 @@
             font-size: 1.4rem;
         }
 
-        .modal input {
+        .modal input[type="text"],
+        .modal input[type="url"] {
             width: 100%;
+            box-sizing: border-box;
             padding: 12px;
             margin: 10px 0;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -239,9 +283,46 @@
             font-size: 1rem;
         }
 
-        [data-theme="light"] .modal input {
+        [data-theme="light"] .modal input[type="text"],
+        [data-theme="light"] .modal input[type="url"] {
             border-color: rgba(0, 0, 0, 0.2);
             background: rgba(0, 0, 0, 0.03);
+        }
+
+        .file-label {
+            width: 100%;
+            box-sizing: border-box;
+            margin: 10px 0;
+            padding: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--muted);
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .file-label:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        [data-theme="light"] .file-label {
+            border-color: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        [data-theme="light"] .file-label:hover {
+            border-color: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .file-input {
+            display: none;
         }
 
         .modal-buttons {
@@ -300,6 +381,14 @@
             <h2 id="modalTitle">Add New Link</h2>
             <input type="text" id="linkName" placeholder="Name (e.g. Twitter)" autocomplete="off">
             <input type="url" id="linkUrl" placeholder="https://x.com" autocomplete="off">
+            <label class="file-label">
+                <span id="iconFileNameLight">Light Colored Icon (For Dark Mode)</span>
+                <input type="file" id="linkIconLight" accept="image/png, image/jpeg, image/webp" class="file-input">
+            </label>
+            <label class="file-label">
+                <span id="iconFileNameDark">Dark Colored Icon (For Light Mode)</span>
+                <input type="file" id="linkIconDark" accept="image/png, image/jpeg, image/webp" class="file-input">
+            </label>
             <div class="modal-buttons">
                 <button class="btn" id="cancelBtn">Cancel</button>
                 <button class="btn" id="saveBtn">Save</button>
@@ -323,6 +412,7 @@
 
         toggleBtn.addEventListener('click', () => {
             setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+            if (typeof renderLinks === 'function') renderLinks();
         });
 
         // ── Date ────────────────────────────────────────────────
@@ -332,18 +422,34 @@
 
         // ── Links ───────────────────────────────────────────────
         const linksContainer = document.querySelector('.links');
-        let links = JSON.parse(localStorage.getItem('customLinks')) || [
-            { name: 'ChatGPT', url: 'https://chatgpt.com' },
-            { name: 'Cosmos', url: 'https://cosmos.so' },
-            { name: 'Facebook', url: 'https://facebook.com' },
-            { name: 'Gemini', url: 'https://gemini.google.com' },
-            { name: 'Github', url: 'https://github.com' },
-            { name: 'Grok', url: 'https://grok.x.ai' },
-            { name: 'iMathEQ', url: 'https://www.imatheq.com/imatheq/com/imatheq/math-equation-editor-latex-mathml.html' },
-            { name: 'Pinterest', url: 'https://pinterest.com' },
-            { name: 'Youtube', url: 'https://youtube.com' },
-            { name: 'Zibrary', url: 'https://z-library.sk/' }
+
+        const defaultLinks = [
+            { name: 'ChatGPT', url: 'https://chatgpt.com', iconDark: 'icons/dark/chatgpt (dark).png', iconLight: 'icons/light/chatgpt (light).png' },
+            { name: 'Facebook', url: 'https://facebook.com', iconDark: 'icons/dark/facebook (dark).png', iconLight: 'icons/light/facebook (light).png' },
+            { name: 'Gemini', url: 'https://gemini.google.com', iconDark: 'icons/dark/gemini (dark).png', iconLight: 'icons/light/gemini (light).png' },
+            { name: 'Grok', url: 'https://grok.x.ai', iconDark: 'icons/dark/grok (dark).png', iconLight: 'icons/light/grok (light).png' },
+            { name: 'YouTube Music', url: 'https://music.youtube.com', iconDark: 'icons/dark/ytmusic (dark).png', iconLight: 'icons/light/ytmusic (light).png' },
+            { name: 'Pinterest', url: 'https://pinterest.com', iconDark: 'icons/dark/pinterest (dark).png', iconLight: 'icons/light/pinterest (light).png' },
+            { name: 'Gmail', url: 'https://mail.google.com/mail/u/0/', iconDark: 'icons/dark/gmail (dark).png', iconLight: 'icons/light/gmail (light).png' },
+            { name: 'GitHub', url: 'https://github.com', iconDark: 'icons/dark/github (dark).png', iconLight: 'icons/light/github (light).png' },
+            { name: 'Messenger', url: 'https://www.messenger.com/', iconDark: 'icons/dark/messenger (dark).png', iconLight: 'icons/light/messenger (light).png' },
+            { name: 'Cosmos', url: 'https://cosmos.so', iconDark: 'icons/dark/comsos (dark).png', iconLight: 'icons/light/cosmos (light).png' },
+            { name: 'iMathEQ', url: 'https://www.imatheq.com/imatheq/com/imatheq/math-equation-editor-latex-mathml.html', iconDark: 'icons/dark/imath (dark).png', iconLight: 'icons/light/imath (light).png' },
+            { name: 'Z-Library', url: 'https://z-library.sk/', iconDark: 'icons/dark/zlib (dark).png', iconLight: 'icons/light/zlib (light).png' },
         ];
+
+        let links = JSON.parse(localStorage.getItem('customLinks')) || defaultLinks;
+
+        // Upgrade legacy links without icons to use new defaults if they match
+        links = links.map(link => {
+            if (!link.iconDark && !link.iconLight && !link.customIcon) {
+                const def = defaultLinks.find(d => d.name === link.name && d.url === link.url);
+                if (def) {
+                    return { ...link, iconDark: def.iconDark, iconLight: def.iconLight };
+                }
+            }
+            return link;
+        });
 
         links.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -359,7 +465,40 @@
                 const a = document.createElement('a');
                 a.href = link.url;
                 a.className = 'link-item';
-                a.textContent = link.name;
+
+                const icon = document.createElement('img');
+                icon.className = 'link-icon';
+
+                const isLight = document.documentElement.dataset.theme === 'light';
+                let iconSrc = null;
+
+                if (isLight && link.iconDark) {
+                    iconSrc = link.iconDark;
+                } else if (!isLight && link.iconLight) {
+                    iconSrc = link.iconLight;
+                } else if (link.iconLight || link.iconDark) {
+                    iconSrc = link.iconLight || link.iconDark;
+                } else if (link.customIcon) {
+                    iconSrc = link.customIcon; // legacy support
+                }
+
+                if (iconSrc) {
+                    icon.src = iconSrc;
+                } else {
+                    try {
+                        const domain = new URL(link.url).hostname;
+                        icon.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+                    } catch {
+                        icon.style.display = 'none';
+                    }
+                }
+                icon.onerror = () => icon.style.display = 'none';
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = link.name;
+
+                a.appendChild(icon);
+                a.appendChild(textSpan);
 
                 const editBtn = document.createElement('span');
                 editBtn.className = 'action-btn edit-btn';
@@ -411,14 +550,71 @@
         const modalTitle = document.getElementById('modalTitle');
         const nameInput = document.getElementById('linkName');
         const urlInput = document.getElementById('linkUrl');
+        const iconInputLight = document.getElementById('linkIconLight');
+        const iconInputDark = document.getElementById('linkIconDark');
+        const iconFileNameLight = document.getElementById('iconFileNameLight');
+        const iconFileNameDark = document.getElementById('iconFileNameDark');
         const cancelBtn = document.getElementById('cancelBtn');
         const saveBtn = document.getElementById('saveBtn');
+
+        let currentIconLight = null;
+        let currentIconDark = null;
+        let legacyCustomIcon = null;
+
+        function processImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxSize = 128;
+                    let w = img.width;
+                    let h = img.height;
+                    if (w > maxSize || h > maxSize) {
+                        if (w > h) { h = h * (maxSize / w); w = maxSize; }
+                        else { w = w * (maxSize / h); h = maxSize; }
+                    }
+                    canvas.width = w; canvas.height = h;
+                    ctx.drawImage(img, 0, 0, w, h);
+                    callback(canvas.toDataURL('image/png'));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        iconInputLight.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                iconFileNameLight.textContent = file.name;
+                processImage(file, (dataUrl) => currentIconLight = dataUrl);
+            }
+        });
+
+        iconInputDark.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                iconFileNameDark.textContent = file.name;
+                processImage(file, (dataUrl) => currentIconDark = dataUrl);
+            }
+        });
 
         function openAddModal() {
             editingIndex = -1;
             modalTitle.textContent = 'Add New Link';
             nameInput.value = '';
             urlInput.value = '';
+
+            iconInputLight.value = '';
+            iconInputDark.value = '';
+            currentIconLight = null;
+            currentIconDark = null;
+            legacyCustomIcon = null;
+
+            iconFileNameLight.textContent = 'Light Colored Icon (For Dark Mode)';
+            iconFileNameDark.textContent = 'Dark Colored Icon (For Light Mode)';
+
             modal.style.display = 'flex';
             nameInput.focus();
         }
@@ -429,6 +625,16 @@
             modalTitle.textContent = 'Edit Link';
             nameInput.value = link.name;
             urlInput.value = link.url;
+
+            iconInputLight.value = '';
+            iconInputDark.value = '';
+            currentIconLight = link.iconLight || null;
+            currentIconDark = link.iconDark || null;
+            legacyCustomIcon = link.customIcon || null;
+
+            iconFileNameLight.textContent = currentIconLight ? 'Light Icon Selected (Click to change)' : 'Light Colored Icon (For Dark Mode)';
+            iconFileNameDark.textContent = currentIconDark ? 'Dark Icon Selected (Click to change)' : 'Dark Colored Icon (For Light Mode)';
+
             modal.style.display = 'flex';
             nameInput.focus();
         }
@@ -441,15 +647,26 @@
 
             if (!url.startsWith('http')) url = 'https://' + url;
 
+            const newLink = { name, url };
+            if (currentIconLight) newLink.iconLight = currentIconLight;
+            if (currentIconDark) newLink.iconDark = currentIconDark;
+            // Retain legacy custom icon if we edit a link without providing a light/dark mode icon explicitly
+            if (!currentIconLight && !currentIconDark && legacyCustomIcon) newLink.customIcon = legacyCustomIcon;
+
             if (editingIndex === -1) {
-                links.push({ name, url });
+                links.push(newLink);
             } else {
-                links[editingIndex] = { name, url };
+                links[editingIndex] = newLink;
             }
 
             links.sort((a, b) => a.name.localeCompare(b.name));
 
-            localStorage.setItem('customLinks', JSON.stringify(links));
+            try {
+                localStorage.setItem('customLinks', JSON.stringify(links));
+            } catch (e) {
+                alert('Storage quota exceeded. Please use a smaller image.');
+                return;
+            }
             renderLinks();
             modal.style.display = 'none';
         }
