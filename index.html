@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@100;300;400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@100;300;400&family=Rakkas&display=swap"
         rel="stylesheet">
 
     <style>
@@ -50,12 +50,45 @@
         }
 
         .day {
+            position: relative;
+            height: 110px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .day-en,
+        .day-ar {
+            position: absolute;
+            transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
+            white-space: nowrap;
+        }
+
+        .day-en {
             font-family: 'Playfair Display', serif;
             font-size: 5.2rem;
-            font-weight: 400;
-            margin: 0;
             letter-spacing: -1.5px;
-            line-height: 0.95;
+            opacity: 1;
+        }
+
+        .day-ar {
+            font-family: 'Rakkas', serif;
+            font-size: 6rem;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        /* Classes for transition */
+        .day.show-ar .day-en {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .day.show-ar .day-ar {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .date {
@@ -363,7 +396,10 @@
 <body>
 
     <header>
-        <div class="day"></div>
+        <div class="day">
+            <span class="day-en"></span>
+            <span class="day-ar"></span>
+        </div>
         <div class="date"></div>
     </header>
 
@@ -417,7 +453,21 @@
 
         // ── Date ────────────────────────────────────────────────
         const now = new Date();
-        document.querySelector('.day').textContent = now.toLocaleDateString('en-US', { weekday: 'long' });
+        const dayEn = now.toLocaleDateString('en-US', { weekday: 'long' });
+        const dayAr = now.toLocaleDateString('ar-EG', { weekday: 'long' });
+
+        const dayContainer = document.querySelector('.day');
+        const dayEnSpan = document.querySelector('.day-en');
+        const dayArSpan = document.querySelector('.day-ar');
+
+        dayEnSpan.textContent = dayEn;
+        dayArSpan.textContent = dayAr;
+
+        // Transition logic
+        setInterval(() => {
+            dayContainer.classList.toggle('show-ar');
+        }, 5000);
+
         document.querySelector('.date').textContent = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`;
 
         // ── Links ───────────────────────────────────────────────
